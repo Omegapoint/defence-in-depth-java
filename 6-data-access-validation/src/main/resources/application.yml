@@ -1,1 +1,15 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: ${KEY_STORE_FILE_PATH}
+    key-store-password: ${KEY_STORE_PASSWORD}
+    key-alias: defence-in-depth
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/auth/realms/defence-in-depth
 
