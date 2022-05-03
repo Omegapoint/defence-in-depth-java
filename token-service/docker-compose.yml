@@ -1,0 +1,12 @@
+services:
+  keycloak:
+    image: jboss/keycloak
+    volumes:
+      - ./keycloak:/opt/jboss/keycloak/imports
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json
+      DB_VENDOR: h2
+    ports:
+      - 8180:8080
