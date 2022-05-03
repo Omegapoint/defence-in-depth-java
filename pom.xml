@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.7</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>defence.in.depth</groupId>
+    <artifactId>root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>defence-in-depth</name>
+    <description>Secure Rest API according to Defence In Depth</description>
+    <packaging>pom</packaging>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <modules>
+        <module>1-request-validation</module>
+        <module>2-token-validation</module>
+        <module>3-token-transformation</module>
+        <module>4-input-data-validation</module>
+        <module>5-operation-validation</module>
+        <module>6-data-access-validation</module>
+        <module>7-secure-by-design</module>
+        <module>8-secrets</module>
+        <module>9-complete-with-all-defence-layers</module>
+    </modules>
+
+</project>
