@@ -1,1 +1,22 @@
-
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: # Overwritten by Secrets Manager
+    key-store-password: # Overwritten by Secrets Manager
+    key-alias: defence-in-depth
+spring:
+  application:
+    name: defence-in-depth
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/auth/realms/defence-in-depth
+  config:
+    import:
+      'aws-secretsmanager:defence-in-depth'
+aws:
+  secretsmanager:
+    region: eu-west-1
