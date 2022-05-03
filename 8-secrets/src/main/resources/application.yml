@@ -1,1 +1,7 @@
-
+spring:
+  config:
+    import:
+      'aws-secretsmanager:defence-in-depth'
+aws:
+  secretsmanager:
+    region: eu-west-1
