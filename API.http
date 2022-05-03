@@ -1,0 +1,37 @@
+### Demo 2 returns 401 without token
+GET https://localhost:8443/api/products/se1
+
+### Fetch access-token from token service
+POST http://localhost:8180/auth/realms/defence-in-depth/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=m2m&client_secret=secret&scope=products.read
+
+> {% client.global.set("jwt", response.body.access_token);%}
+
+### Get product valid token returns 200
+GET https://localhost:8443/api/products/se1
+Authorization: Bearer {{jwt}}
+
+### Demo 4 returns 400 for bad input
+GET https://localhost:8443/api/products/se1' OR 1=1--
+Authorization: Bearer {{jwt}}
+
+### Demo 6 return 404 for norwegian market
+GET https://localhost:8443/api/products/no1
+Authorization: Bearer {{jwt}}
+
+### Demo 9 return 200 OK for public API without token
+GET https://localhost:8443/api/no-authentication/hello
+
+### Demo 9 return 200 OK for public API with token
+### (if this is not wanted, read about isAnonymous() preauthorize check)
+GET https://localhost:8443/api/no-authentication/hello
+Authorization: Bearer {{jwt}}
+
+### Demo 9 return 401 for anonymous API without token
+GET https://localhost:8443/api/no-authorization/hello
+
+### Demo 9 return 200 OK for anonymous API with token
+GET https://localhost:8443/api/no-authorization/hello
+Authorization: Bearer {{jwt}}
