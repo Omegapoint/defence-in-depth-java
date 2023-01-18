@@ -22,16 +22,20 @@ GET https://localhost:8443/api/products/no1
 Authorization: Bearer {{jwt}}
 
 ### Demo 9 return 200 OK for public API without token
-GET https://localhost:8443/api/no-authentication/hello
+GET https://localhost:8443/api/health/live
 
 ### Demo 9 return 200 OK for public API with token
 ### (if this is not wanted, read about isAnonymous() preauthorize check)
-GET https://localhost:8443/api/no-authentication/hello
+GET https://localhost:8443/api/health/live
 Authorization: Bearer {{jwt}}
 
 ### Demo 9 return 401 for anonymous API without token
-GET https://localhost:8443/api/no-authorization/hello
+GET https://localhost:8443/api/health/ready
 
 ### Demo 9 return 200 OK for anonymous API with token
-GET https://localhost:8443/api/no-authorization/hello
+GET https://localhost:8443/api/health/ready
+Authorization: Bearer {{jwt}}
+
+### Demo 9 return 200 OK for anonymous API with token
+PUT https://localhost:8443/api/error
 Authorization: Bearer {{jwt}}
