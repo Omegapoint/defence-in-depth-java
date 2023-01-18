@@ -15,7 +15,7 @@ public final class Product {
     public Product(String id, String name, String market) {
         this.id = new ProductId(id);
         this.name = new ProductName(name);
-        this.market = ProductMarketId.valueOf(market);
+        this.market = ProductMarketId.of(market);
     }
 
     public ProductId getId() {

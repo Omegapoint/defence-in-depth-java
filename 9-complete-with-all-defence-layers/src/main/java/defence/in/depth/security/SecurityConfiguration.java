@@ -39,8 +39,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .authorizeHttpRequests(authorize -> authorize
                 .antMatchers("/api/products/**").hasAnyAuthority(READ_PRODUCTS_SCOPE, WRITE_PRODUCTS_SCOPE)
-                .antMatchers("/api/no-authentication/**").permitAll()
-                .antMatchers("/api/no-authorization/**").authenticated()
+                .antMatchers("/api/health/live").permitAll()
+                .antMatchers("/api/health/**").authenticated()
+                .antMatchers("/api/error/**").authenticated()
                 .antMatchers("/**").denyAll() // Force authorization on all new endpoints
                 .anyRequest().authenticated() // Force authentication on all new endpoints
             )

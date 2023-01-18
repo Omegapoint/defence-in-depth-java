@@ -1,3 +1,5 @@
+app:
+  version: '@project.version@'
 server:
   port: 8443
   ssl:
@@ -16,7 +18,7 @@ spring:
           issuer-uri: http://localhost:8180/auth/realms/defence-in-depth
   config:
     import:
-      'aws-secretsmanager:defence-in-depth'
+      'optional:aws-secretsmanager:defence-in-depth'
 aws:
   secretsmanager:
     region: eu-west-1

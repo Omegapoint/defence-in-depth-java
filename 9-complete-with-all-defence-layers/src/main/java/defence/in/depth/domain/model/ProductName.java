@@ -16,7 +16,10 @@ public final class ProductName {
     }
 
     public static boolean isValidName(String id) {
-        return StringUtils.isEmpty(id) || id.length() > 10 || !StringUtils.isAlphanumeric(id);
+        // Names are very hard to restrict, but we at least limit the size.
+        //
+        // See also https://stackoverflow.com/q/20958
+        return !StringUtils.isEmpty(id) && id.length() <= 200;
     }
 
     public static void assertValidName(String id) {

@@ -12,7 +12,7 @@ public final class ProductMapper {
     public static Product toProduct(ProductEntity productEntity) {
         ProductId productId = new ProductId(productEntity.id());
         ProductName productName = new ProductName(productEntity.name());
-        ProductMarketId productMarketId = ProductMarketId.valueOf(productEntity.market());
+        ProductMarketId productMarketId = ProductMarketId.of(productEntity.market());
         return new Product(productId, productName, productMarketId);
     }
 
