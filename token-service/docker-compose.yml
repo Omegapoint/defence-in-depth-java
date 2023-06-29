@@ -8,4 +8,4 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - 8180:8080
-    command: start-dev --import-realm --http-relative-path /auth
+    command: start-dev --import-realm
