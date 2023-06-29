@@ -11,5 +11,5 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/auth/realms/defence-in-depth
+          issuer-uri: http://localhost:8180/realms/defence-in-depth
 
