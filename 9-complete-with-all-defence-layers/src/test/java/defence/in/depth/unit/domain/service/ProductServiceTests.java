@@ -5,9 +5,11 @@ import defence.in.depth.database.repository.ProductsRepository;
 import defence.in.depth.domain.exceptions.ProductMarketMismatchException;
 import defence.in.depth.domain.exceptions.ProductNotFoundException;
 import defence.in.depth.domain.exceptions.ReadProductNotAllowedException;
+import defence.in.depth.domain.model.DomainEvent;
 import defence.in.depth.domain.model.Product;
 import defence.in.depth.domain.model.ProductId;
 import defence.in.depth.domain.model.ProductMarketId;
+import defence.in.depth.domain.service.AuditService;
 import defence.in.depth.domain.service.PermissionService;
 import defence.in.depth.domain.service.ProductsService;
 import org.junit.jupiter.api.Assertions;
@@ -27,10 +29,13 @@ public class ProductServiceTests {
     private ProductsRepository productsRepository;
     private PermissionService permissionService;
 
+    private AuditService auditService;
+
     @BeforeEach
     public void setupMocks() {
         this.productsRepository = Mockito.mock(ProductsRepository.class);
         this.permissionService = Mockito.mock(PermissionService.class);
+        this.auditService = Mockito.mock(AuditService.class);
     }
 
     @Test
@@ -39,12 +44,13 @@ public class ProductServiceTests {
         Mockito.when(permissionService.canReadProducts()).thenReturn(false);
 
         ProductId productId = new ProductId("se1");
-        ProductsService productsService = new ProductsService(productsRepository, permissionService);
+        ProductsService productsService = new ProductsService(productsRepository, permissionService, auditService);
 
         Assertions.assertThrows(ReadProductNotAllowedException.class, () -> productsService.getById(productId));
 
         Mockito.verify(permissionService, Mockito.times(1)).canReadProducts();
-        Mockito.verifyNoMoreInteractions(productsRepository, permissionService);
+        Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.NO_ACCESS_TO_OPERATION, productId);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
 
     }
 
@@ -52,14 +58,14 @@ public class ProductServiceTests {
     public void getById_throwsNotFound_IfValidClaimButNotExisting() {
         Mockito.when(permissionService.canReadProducts()).thenReturn(true);
 
-        ProductsService productService = new ProductsService(productsRepository, permissionService);
+        ProductsService productService = new ProductsService(productsRepository, permissionService, auditService);
 
         Assertions.assertThrows(ProductNotFoundException.class,
                 () -> productService.getById(new ProductId("notfound")));
 
         Mockito.verify(permissionService, Mockito.times(1)).canReadProducts();
         Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("notfound"));
-        Mockito.verifyNoMoreInteractions(productsRepository, permissionService);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
     }
 
     @Test
@@ -70,7 +76,7 @@ public class ProductServiceTests {
         Mockito.when(permissionService.canReadProducts()).thenReturn(true);
         Mockito.when(permissionService.hasPermissionToMarket(ProductMarketId.NO)).thenReturn(false);
 
-        ProductsService productService = new ProductsService(productsRepository, permissionService);
+        ProductsService productService = new ProductsService(productsRepository, permissionService, auditService);
 
         Assertions.assertThrows(ProductMarketMismatchException.class,
                 () -> productService.getById(productId));
@@ -78,7 +84,8 @@ public class ProductServiceTests {
         Mockito.verify(permissionService, Mockito.times(1)).canReadProducts();
         Mockito.verify(permissionService, Mockito.times(1)).hasPermissionToMarket(ProductMarketId.NO);
         Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("42"));
-        Mockito.verifyNoMoreInteractions(productsRepository, permissionService);
+        Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.NO_ACCESS_TO_DATA, productId);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
 
     }
 
@@ -95,7 +102,7 @@ public class ProductServiceTests {
         Mockito.when(permissionService.canReadProducts()).thenReturn(true);
         Mockito.when(permissionService.hasPermissionToMarket(ProductMarketId.SE)).thenReturn(true);
 
-        ProductsService productsService = new ProductsService(productsRepository, permissionService);
+        ProductsService productsService = new ProductsService(productsRepository, permissionService, auditService);
 
         Product product = productsService.getById(productId);
 
@@ -104,7 +111,8 @@ public class ProductServiceTests {
         Mockito.verify(permissionService, Mockito.times(1)).canReadProducts();
         Mockito.verify(permissionService, Mockito.times(1)).hasPermissionToMarket(ProductMarketId.SE);
         Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("42"));
-        Mockito.verifyNoMoreInteractions(productsRepository, permissionService);
+        Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.PRODUCT_READ, productId);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
     }
 
 }
