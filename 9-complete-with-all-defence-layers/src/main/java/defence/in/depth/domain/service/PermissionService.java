@@ -22,6 +22,10 @@ public class PermissionService {
         return getMarketForAuthenticatedUser().equals(productMarketId);
     }
 
+    public String getUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     private ProductMarketId getMarketForAuthenticatedUser() {
         // This is typically a service call or database query, based on identity
         return ProductMarketId.SE;
