@@ -1,12 +1,11 @@
 services:
   keycloak:
-    image: jboss/keycloak
+    image: quay.io/keycloak/keycloak:21.1
     volumes:
-      - ./keycloak:/opt/jboss/keycloak/imports
+      - ./keycloak:/opt/keycloak/data/import
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json
-      DB_VENDOR: h2
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - 8180:8080
+    command: start-dev --import-realm --http-relative-path /auth
