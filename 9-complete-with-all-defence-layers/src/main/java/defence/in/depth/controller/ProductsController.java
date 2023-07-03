@@ -24,7 +24,7 @@ public class ProductsController {
         this.productsService = productsService;
     }
 
-    // More granular control using preauthorize as a compliment to antMatchers defined in the security configuration.
+    // More granular control using preauthorize as a compliment to requestMatchers defined in the security configuration.
     // Note that the main permission check is still in the core business domain in the productsService
     @PreAuthorize("hasAuthority('" + READ_PRODUCTS_SCOPE + "')")
     @GetMapping("/{id}")
