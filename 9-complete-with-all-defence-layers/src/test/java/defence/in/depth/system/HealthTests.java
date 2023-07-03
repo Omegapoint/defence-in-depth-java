@@ -40,7 +40,7 @@ public class HealthTests extends BaseTests {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body()).contains("\"version\":\"1.0.0\"");
+        assertThat(response.body()).contains("\"version\":\"1.0.0-SNAPSHOT\"");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class HealthTests extends BaseTests {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body()).contains("\"version\":\"1.0.0\"");
+        assertThat(response.body()).contains("\"version\":\"1.0.0-SNAPSHOT\"");
     }
 
     @Test
