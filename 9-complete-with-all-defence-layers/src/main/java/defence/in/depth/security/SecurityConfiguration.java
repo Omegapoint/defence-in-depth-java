@@ -38,6 +38,7 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/products/**").hasAnyAuthority(READ_PRODUCTS_SCOPE, WRITE_PRODUCTS_SCOPE)
                 .requestMatchers("/api/health/live").permitAll()
+                .requestMatchers("/error/**").permitAll()
                 .requestMatchers("/api/health/**").authenticated()
                 .requestMatchers("/api/error/**").authenticated()
                 .requestMatchers("/**").denyAll() // Force authorization on all new endpoints
