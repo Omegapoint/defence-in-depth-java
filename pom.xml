@@ -18,6 +18,8 @@
     <packaging>pom</packaging>
     <properties>
         <java.version>17</java.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <spring-cloud-aws.version>2.4.1</spring-cloud-aws.version>
     </properties>
 
     <modules>
