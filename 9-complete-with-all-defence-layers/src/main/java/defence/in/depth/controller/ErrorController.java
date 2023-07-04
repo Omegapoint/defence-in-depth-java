@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ErrorController {
 
     @PutMapping("")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity throwException() {
         throw new NotImplementedException("Not implemented on purpose");
     }
