@@ -34,11 +34,13 @@ public class SecurityConfiguration {
         // requestMatchers("/**").denyAll() will return 403 if not matched above, for example authenticated user without scopes
         // .anyRequest().authenticated() will force authentication on all endpoints.
         // This should always be last step of the chain to force opt-out security
+        // Note that the /error matcher is required to return error responses for authenticated requests.
+        // See more: https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc
         http
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/products/**").hasAnyAuthority(READ_PRODUCTS_SCOPE, WRITE_PRODUCTS_SCOPE)
                 .requestMatchers("/api/health/live").permitAll()
-                .requestMatchers("/error/**").permitAll()
+                .requestMatchers("/error").authenticated()
                 .requestMatchers("/api/health/**").authenticated()
                 .requestMatchers("/api/error/**").authenticated()
                 .requestMatchers("/**").denyAll() // Force authorization on all new endpoints

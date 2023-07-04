@@ -1,22 +1,15 @@
 package defence.in.depth.system;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.Instant;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
+import java.time.Instant;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -50,6 +43,19 @@ public class ErrorTests extends BaseTests {
                 .satisfies(field -> assertThat(Instant.parse((String) field)).isBefore(Instant.now()));
     }
 
+    @Test
+    public void throwWithNoToken_ShouldReturn401() throws IOException, InterruptedException {
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .uri(URI.create(getBaseUrl() + "/api/error"))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
 
     private record ErrorDTO(String status, String error, String path, String timestamp, String derp) {
         private ErrorDTO(String status, String error, String path) {
