@@ -1,5 +1,6 @@
 package defence.in.depth.domain.service;
 
+import defence.in.depth.database.entity.ProductEntity;
 import defence.in.depth.database.repository.ProductsRepository;
 import defence.in.depth.domain.exceptions.ProductMarketMismatchException;
 import defence.in.depth.domain.exceptions.ProductNotFoundException;
@@ -7,6 +8,7 @@ import defence.in.depth.domain.exceptions.ReadProductNotAllowedException;
 import defence.in.depth.domain.mapper.ProductMapper;
 import defence.in.depth.domain.model.DomainEvent;
 import defence.in.depth.domain.model.Product;
+import defence.in.depth.domain.model.ProductDescription;
 import defence.in.depth.domain.model.ProductId;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +44,16 @@ public class ProductsService {
 
         auditService.log(DomainEvent.PRODUCT_READ, productId);
         return product;
+    }
+
+    //TODO: Add method for product description with input description and product id. Also input validation and access control
+    public void addDescription(ProductId productId, ProductDescription productDescription) {
+        Product product = productsRepository
+                .findById(productId.getProductId())
+                .map(ProductMapper::toProduct)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        Product productWithDescription = product.addDescription(productDescription);
+        ProductEntity productEntity = ProductMapper.toEntity(productWithDescription);
+        productsRepository.save(productId.getProductId(), productEntity);
     }
 }

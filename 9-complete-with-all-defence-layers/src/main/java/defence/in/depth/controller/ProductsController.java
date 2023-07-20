@@ -1,18 +1,19 @@
 package defence.in.depth.controller;
 
+import defence.in.depth.domain.exceptions.ProductNotFoundException;
 import defence.in.depth.domain.mapper.ProductMapper;
 import defence.in.depth.domain.model.Product;
+import defence.in.depth.domain.model.ProductDescription;
 import defence.in.depth.domain.model.ProductId;
 import defence.in.depth.domain.service.ProductsService;
 import defence.in.depth.dto.ProductDTO;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static defence.in.depth.domain.service.PermissionService.READ_PRODUCTS_SCOPE;
+import static defence.in.depth.domain.service.PermissionService.WRITE_PRODUCTS_SCOPE;
 
 @RestController
 @RequestMapping("/api/products")
@@ -34,6 +35,19 @@ public class ProductsController {
         Product product = productsService.getById(id);
         ProductDTO productDto = ProductMapper.toProductDTO(product);
         return ResponseEntity.ok(productDto);
+    }
+
+    //TODO: AddProductDescription endpoint
+    @PreAuthorize("hasAuthority('" + READ_PRODUCTS_SCOPE + "')")
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> addProductDescription(@PathVariable ("id") ProductId productId,
+                                                      @RequestBody ProductDescription productDescription) {
+        try {
+            productsService.addDescription(productId, productDescription);
+        } catch (ProductNotFoundException e) {
+            e.printStackTrace();
+        }
+        return  ResponseEntity.ok().build();
     }
 
 }

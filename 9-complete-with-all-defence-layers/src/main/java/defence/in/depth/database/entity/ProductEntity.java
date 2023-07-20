@@ -1,5 +1,7 @@
 package defence.in.depth.database.entity;
 
-public record ProductEntity(String id, String name, String market) {
+public record ProductEntity(String id, String name, String market, String description) {
 
 }
+
+//TODO: add product description
