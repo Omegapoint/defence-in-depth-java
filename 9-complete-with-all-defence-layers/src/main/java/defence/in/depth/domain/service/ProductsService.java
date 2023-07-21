@@ -5,6 +5,7 @@ import defence.in.depth.database.repository.ProductsRepository;
 import defence.in.depth.domain.exceptions.ProductMarketMismatchException;
 import defence.in.depth.domain.exceptions.ProductNotFoundException;
 import defence.in.depth.domain.exceptions.ReadProductNotAllowedException;
+import defence.in.depth.domain.exceptions.WriteProductNotAllowedException;
 import defence.in.depth.domain.mapper.ProductMapper;
 import defence.in.depth.domain.model.DomainEvent;
 import defence.in.depth.domain.model.Product;
@@ -48,12 +49,24 @@ public class ProductsService {
 
     //TODO: Add method for product description with input description and product id. Also input validation and access control
     public void addDescription(ProductId productId, ProductDescription productDescription) {
+        if (!permissionService.canWriteProducts()) {
+            auditService.log(DomainEvent.NO_ACCESS_TO_OPERATION, productId);
+            throw new WriteProductNotAllowedException("User not allowed to write to product");
+        }
+
         Product product = productsRepository
                 .findById(productId.getProductId())
                 .map(ProductMapper::toProduct)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        if (!permissionService.hasPermissionToMarket(product.getMarket())) {
+            auditService.log(DomainEvent.NO_ACCESS_TO_DATA, productId);
+            throw new ProductMarketMismatchException("User market does not match product market");
+        }
+
         Product productWithDescription = product.addDescription(productDescription);
         ProductEntity productEntity = ProductMapper.toEntity(productWithDescription);
         productsRepository.save(productId.getProductId(), productEntity);
+        auditService.log(DomainEvent.PRODUCT_WRITE, productId);
     }
 }

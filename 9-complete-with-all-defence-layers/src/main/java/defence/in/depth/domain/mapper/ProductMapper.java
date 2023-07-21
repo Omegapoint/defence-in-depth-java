@@ -18,14 +18,14 @@ public final class ProductMapper {
         return new ProductDTO(product.getId().getProductId(),
             product.getName().getName(),
             product.getMarket().name(),
-            product.getDescription().productDescription());
+            product.getDescription().getProductDescription());
     }
 
     public static ProductEntity toEntity(Product product) {
         String productId = product.getId().getProductId();
         String productName = product.getName().getName();
         String productMarketId = product.getMarket().name();
-        String productDescription = product.getDescription().productDescription();
+        String productDescription = product.getDescription().getProductDescription();
         return new ProductEntity(productId, productName, productMarketId, productDescription);
     }
 }

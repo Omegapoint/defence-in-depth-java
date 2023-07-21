@@ -1,6 +1,7 @@
 package defence.in.depth.controller;
 
 import defence.in.depth.domain.exceptions.ProductNotFoundException;
+import defence.in.depth.domain.exceptions.WriteProductNotAllowedException;
 import defence.in.depth.domain.mapper.ProductMapper;
 import defence.in.depth.domain.model.Product;
 import defence.in.depth.domain.model.ProductDescription;
@@ -38,16 +39,12 @@ public class ProductsController {
     }
 
     //TODO: AddProductDescription endpoint
-    @PreAuthorize("hasAuthority('" + READ_PRODUCTS_SCOPE + "')")
+    @PreAuthorize("hasAuthority('" + WRITE_PRODUCTS_SCOPE + "')")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> addProductDescription(@PathVariable ("id") ProductId productId,
-                                                      @RequestBody ProductDescription productDescription) {
-        try {
-            productsService.addDescription(productId, productDescription);
-        } catch (ProductNotFoundException e) {
-            e.printStackTrace();
-        }
-        return  ResponseEntity.ok().build();
+    public ResponseEntity<Void> addDescription(@PathVariable ("id") ProductId productId,
+                                               @RequestBody ProductDescription productDescription) {
+        productsService.addDescription(productId, productDescription);
+        return ResponseEntity.ok().build();
     }
 
 }

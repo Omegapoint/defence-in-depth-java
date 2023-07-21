@@ -15,8 +15,8 @@ public class ProductsRepository {
     Map<String, ProductEntity> repo = new HashMap<>();
 
     public ProductsRepository() {
-        repo.put("se1", new ProductEntity("se1", "ProductSweden", "SE", ""));
-        repo.put("no1", new ProductEntity("no1", "ProductNorway", "NO", "Lusekofta"));
+        repo.put("se1", new ProductEntity("se1", "ProductSweden", "SE", "description"));
+        repo.put("no1", new ProductEntity("no1", "ProductNorway", "NO", "description"));
     }
 
     public Optional<ProductEntity> findById(String productId) {
