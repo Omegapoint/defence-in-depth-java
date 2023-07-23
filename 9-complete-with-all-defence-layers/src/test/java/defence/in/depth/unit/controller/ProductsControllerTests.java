@@ -104,7 +104,6 @@ public class ProductsControllerTests {
     );
   }
 
-  //TODO: test add description
   @Test
   public void addDescriptionShouldReturn403WhenCanNotWrite() throws Exception {
     doThrow(new WriteProductNotAllowedException("User not allowed to write to product"))
@@ -126,8 +125,6 @@ public class ProductsControllerTests {
             .andExpect(status().isOk());
   }
 
-  //@ParameterizedTest
-  //@MethodSource({"idInjections", "invalidIds"})
   @Test
   public void addDescriptionShouldReturn400WhenInvalidId() throws Exception {
     doNothing().when(productsService).addDescription(any(), any());

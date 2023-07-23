@@ -115,7 +115,6 @@ public class ProductServiceTests {
         Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
     }
 
-    //TODO: test add description
     @Test
     void addDescription_throwsNotAllowed_IfNoValidWriteScope() {
         Mockito.when(permissionService.canWriteProducts()).thenReturn(false);
