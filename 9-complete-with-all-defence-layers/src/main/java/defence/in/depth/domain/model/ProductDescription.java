@@ -3,7 +3,6 @@ package defence.in.depth.domain.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import defence.in.depth.domain.exceptions.InvalidDomainPrimitiveException;
-import org.apache.commons.lang3.StringUtils;
 
 public class ProductDescription {
 
@@ -15,12 +14,15 @@ public class ProductDescription {
         this.productDescription = productDescription;
     }
 
-    public String getProductDescription() {
+    public String getDescription() {
         return this.productDescription;
     }
 
     public static boolean isValidDescription(String description) {
-        if (StringUtils.isEmpty(description) || description.length() < 10 || description.length() > 300) {
+        if (description == null) {
+            return true;
+        }
+        if (description.length() < 10 || description.length() > 300) {
             return false;
         }
         String regex = "^[a-zA-Z0-9\\s.,!?()*%-]+$";

@@ -8,16 +8,13 @@ public final class Product {
     private final ProductId id;
     private final ProductName name;
     private final ProductMarketId market;
+    private ProductDescription description;
 
-    private final ProductDescription description;
-
-    //TODO: add product description with validation in model
-
-    public Product(ProductId id, ProductName name, ProductMarketId market, ProductDescription description) {
+    private Product(ProductId id, ProductName name, ProductMarketId market) {
         this.id = id;
         this.name = name;
         this.market = market;
-        this.description = description;
+        this.description = new ProductDescription(null);
     }
 
     public Product(String id, String name, String market, String description) {
@@ -40,10 +37,29 @@ public final class Product {
     }
 
     public ProductDescription getDescription() {
-        return  description;
+        return description;
     }
 
-    public Product addDescription(ProductDescription description) {
-        return new Product(this.id, this.name, this.market, description);
+    public static class ProductBuilder {
+        private Product product;
+
+        public ProductBuilder(ProductId id, ProductName name, ProductMarketId market) {
+            this.product = new Product(id, name, market);
+        }
+
+        public ProductBuilder(Product product) {
+            this.product = new Product(product.id, product.name, product.market);
+        }
+
+        public ProductBuilder withDescription(ProductDescription description) {
+            this.product.description = description;
+            return this;
+        }
+
+        public Product build() {
+            Product result = product;
+            this.product = null;
+            return result;
+        }
     }
 }

@@ -118,7 +118,6 @@ public class ProductServiceTests {
     //TODO: test add description
     @Test
     void addDescription_throwsNotAllowed_IfNoValidWriteScope() {
-
         Mockito.when(permissionService.canWriteProducts()).thenReturn(false);
 
         ProductId productId = new ProductId("se1");
@@ -164,7 +163,6 @@ public class ProductServiceTests {
         Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("42"));
         Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.NO_ACCESS_TO_DATA, productId);
         Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
-
     }
 
     @Test

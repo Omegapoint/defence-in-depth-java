@@ -38,7 +38,6 @@ public class ProductsController {
         return ResponseEntity.ok(productDto);
     }
 
-    //TODO: AddProductDescription endpoint
     @PreAuthorize("hasAuthority('" + WRITE_PRODUCTS_SCOPE + "')")
     @PutMapping("/{id}")
     public ResponseEntity<Void> addDescription(@PathVariable ("id") ProductId productId,

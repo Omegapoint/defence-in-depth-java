@@ -2,16 +2,13 @@ package defence.in.depth.unit.domain.model;
 
 import defence.in.depth.domain.exceptions.InvalidDomainPrimitiveException;
 import defence.in.depth.domain.model.ProductDescription;
-import defence.in.depth.domain.model.ProductId;
-import defence.in.depth.domain.model.ProductName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.NullSource;
 
 import java.util.stream.Stream;
 
@@ -28,16 +25,10 @@ public class ProductDescriptionTests {
     }
 
     @ParameterizedTest
-    @NullAndEmptySource
-    public void constructorShouldRejectEmptyData(String description) {
-        assertThrows(InvalidDomainPrimitiveException.class, () -> new ProductDescription(description));
-    }
-
-    @ParameterizedTest
-    //@MethodSource({"defence.in.depth.unit.TestData#strangeNames", "validNames"})
+    @NullSource
     @MethodSource("validDescriptions")
     public void constructorShouldAcceptValidData(String description) {
-        assertThat(new ProductDescription(description).getProductDescription()).isEqualTo(description);
+        assertThat(new ProductDescription(description).getDescription()).isEqualTo(description);
     }
 
     public static Stream<Arguments> validDescriptions() {

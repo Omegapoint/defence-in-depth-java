@@ -15,8 +15,8 @@ public class ProductsRepository {
     Map<String, ProductEntity> repo = new HashMap<>();
 
     public ProductsRepository() {
-        repo.put("se1", new ProductEntity("se1", "ProductSweden", "SE", "description"));
-        repo.put("no1", new ProductEntity("no1", "ProductNorway", "NO", "description"));
+        repo.put("se1", new ProductEntity("se1", "ProductSweden", "SE", null));
+        repo.put("no1", new ProductEntity("no1", "ProductNorway", "NO", null));
     }
 
     public Optional<ProductEntity> findById(String productId) {
@@ -29,6 +29,4 @@ public class ProductsRepository {
     public void save(String productId, ProductEntity productEntity) {
         repo.put(productId, productEntity);
     }
-
-    //TODO: Add save product. Add description to existing products
 }

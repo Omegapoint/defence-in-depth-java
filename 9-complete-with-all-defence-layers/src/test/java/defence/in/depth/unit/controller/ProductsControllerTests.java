@@ -61,13 +61,8 @@ public class ProductsControllerTests {
   @Test
   public void getProductsByIdShouldReturn200WhenAuthorized() throws Exception {
     when(productsService.getById(any())).thenReturn(
-        new Product(
-            new ProductId("se1"),
-            new ProductName("ProductSweden"),
-            ProductMarketId.SE,
-            new ProductDescription("This is a description")
-        )
-    );
+        new Product.ProductBuilder(new ProductId("se1"), new ProductName("ProductSweden"), ProductMarketId.SE)
+                .build());
 
     this.mvc.perform(get("/api/products/se1"))
         .andExpect(status().isOk());
@@ -77,13 +72,8 @@ public class ProductsControllerTests {
   @MethodSource({"idInjections", "invalidIds"})
   public void getProductsByIdShouldReturn400WhenInvalidId(String productId) throws Exception {
     when(productsService.getById(any())).thenReturn(
-        new Product(
-            new ProductId("se1"),
-            new ProductName("ProductSweden"),
-            ProductMarketId.SE,
-            new ProductDescription("This is a description")
-        )
-    );
+        new Product.ProductBuilder(new ProductId("se1"), new ProductName("ProductSweden"), ProductMarketId.SE)
+                .build());
 
     this.mvc.perform(get("/api/products/{id}", productId))
         .andExpect(status().isBadRequest());
@@ -177,5 +167,4 @@ public class ProductsControllerTests {
             Arguments.of("{\"productDescription\":\"\"}")
     );
   }
-  //TODO: 400 for invalid id, nonexistent id,
 }

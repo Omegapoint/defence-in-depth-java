@@ -47,7 +47,6 @@ public class ProductsService {
         return product;
     }
 
-    //TODO: Add method for product description with input description and product id. Also input validation and access control
     public void addDescription(ProductId productId, ProductDescription productDescription) {
         if (!permissionService.canWriteProducts()) {
             auditService.log(DomainEvent.NO_ACCESS_TO_OPERATION, productId);
@@ -64,7 +63,9 @@ public class ProductsService {
             throw new ProductMarketMismatchException("User market does not match product market");
         }
 
-        Product productWithDescription = product.addDescription(productDescription);
+        Product productWithDescription = new Product.ProductBuilder(product)
+                .withDescription(productDescription)
+                .build();
         ProductEntity productEntity = ProductMapper.toEntity(productWithDescription);
         productsRepository.save(productId.getProductId(), productEntity);
         auditService.log(DomainEvent.PRODUCT_WRITE, productId);

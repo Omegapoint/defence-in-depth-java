@@ -11,21 +11,21 @@ public final class ProductMapper {
         ProductName productName = new ProductName(productEntity.name());
         ProductMarketId productMarketId = ProductMarketId.of(productEntity.market());
         ProductDescription productDescription = new ProductDescription(productEntity.description());
-        return new Product(productId, productName, productMarketId, productDescription);
+        return new Product.ProductBuilder(productId, productName, productMarketId).withDescription(productDescription).build();
     }
 
     public static ProductDTO toProductDTO(Product product) {
         return new ProductDTO(product.getId().getProductId(),
             product.getName().getName(),
             product.getMarket().name(),
-            product.getDescription().getProductDescription());
+            product.getDescription().getDescription());
     }
 
     public static ProductEntity toEntity(Product product) {
         String productId = product.getId().getProductId();
         String productName = product.getName().getName();
         String productMarketId = product.getMarket().name();
-        String productDescription = product.getDescription().getProductDescription();
+        String productDescription = product.getDescription().getDescription();
         return new ProductEntity(productId, productName, productMarketId, productDescription);
     }
 }

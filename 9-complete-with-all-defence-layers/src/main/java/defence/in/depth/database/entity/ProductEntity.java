@@ -4,4 +4,3 @@ public record ProductEntity(String id, String name, String market, String descri
 
 }
 
-//TODO: add product description
