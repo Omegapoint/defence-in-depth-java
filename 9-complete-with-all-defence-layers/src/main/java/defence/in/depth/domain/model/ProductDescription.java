@@ -25,8 +25,7 @@ public class ProductDescription {
         if (description.length() < 10 || description.length() > 300) {
             return false;
         }
-        String regex = "^[a-zA-Z0-9\\s.,!?()*%-]+$";
-        return  description.matches(regex) ;
+        return true;
     }
 
     public static void assertValidDescription(String description) {

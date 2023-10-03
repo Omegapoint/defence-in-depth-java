@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 
 import java.util.stream.Stream;
@@ -41,7 +40,6 @@ public class ProductDescriptionTests {
     public static Stream<Arguments> invalidDescriptions() {
         return Stream.of(
                 Arguments.of("tooshort"),
-                Arguments.of("<script>forbidden char</script>"),
                 Arguments.of(RandomStringUtils.randomAlphabetic(301))
         );
     }

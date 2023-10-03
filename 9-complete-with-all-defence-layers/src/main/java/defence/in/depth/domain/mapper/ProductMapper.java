@@ -1,7 +1,11 @@
 package defence.in.depth.domain.mapper;
 
 import defence.in.depth.database.entity.ProductEntity;
-import defence.in.depth.domain.model.*;
+import defence.in.depth.domain.model.Product;
+import defence.in.depth.domain.model.ProductDescription;
+import defence.in.depth.domain.model.ProductId;
+import defence.in.depth.domain.model.ProductMarketId;
+import defence.in.depth.domain.model.ProductName;
 import defence.in.depth.dto.ProductDTO;
 
 public final class ProductMapper {

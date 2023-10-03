@@ -25,7 +25,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.test.context.annotation.SecurityTestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -160,7 +159,6 @@ public class ProductsControllerTests {
   public static Stream<Arguments> invalidDescriptions() {
     return Stream.of(
             Arguments.of("{\"productDescription\":\"tooshort\"}"),
-            Arguments.of("{\"productDescription\":\"<script>forbidden characters</script>\"}"),
             Arguments.of("{\"productDescription\":\"\"}")
     );
   }

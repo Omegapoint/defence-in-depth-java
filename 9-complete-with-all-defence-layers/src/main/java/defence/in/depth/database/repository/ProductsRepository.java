@@ -1,8 +1,6 @@
 package defence.in.depth.database.repository;
 
 import defence.in.depth.database.entity.ProductEntity;
-import defence.in.depth.domain.model.ProductDescription;
-import defence.in.depth.domain.model.ProductId;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
