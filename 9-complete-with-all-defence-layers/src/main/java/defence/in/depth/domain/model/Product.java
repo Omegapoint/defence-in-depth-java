@@ -1,21 +1,19 @@
 package defence.in.depth.domain.model;
 
+import static org.apache.commons.lang3.Validate.validState;
+
 public final class Product {
 
     private final ProductId id;
     private final ProductName name;
     private final ProductMarketId market;
+    private ProductDescription description;
 
-    public Product(ProductId id, ProductName name, ProductMarketId market) {
+    private Product(ProductId id, ProductName name, ProductMarketId market) {
         this.id = id;
         this.name = name;
         this.market = market;
-    }
-
-    public Product(String id, String name, String market) {
-        this.id = new ProductId(id);
-        this.name = new ProductName(name);
-        this.market = ProductMarketId.of(market);
+        this.description = new ProductDescription(null);
     }
 
     public ProductId getId() {
@@ -28,5 +26,39 @@ public final class Product {
 
     public ProductMarketId getMarket() {
         return market;
+    }
+
+    public ProductDescription getDescription() {
+        return description;
+    }
+
+    private void checkInvariants() throws IllegalStateException {
+        validState(id.getProductId().toLowerCase().startsWith(market.name().toLowerCase()));
+    }
+    //TODO: add check invariants assert that id starts with market id
+    public static class ProductBuilder {
+        private Product product;
+
+        public ProductBuilder(ProductId id, ProductName name, ProductMarketId market) {
+            this.product = new Product(id, name, market);
+        }
+
+        public ProductBuilder(Product product) {
+            this.product = new Product(product.id, product.name, product.market);
+        }
+
+        public ProductBuilder withDescription(ProductDescription description) {
+            validState(product != null);
+            this.product.description = description;
+            return this;
+        }
+
+        public Product build() {
+            validState(product != null);
+            product.checkInvariants();
+            Product result = product;
+            this.product = null;
+            return result;
+        }
     }
 }
