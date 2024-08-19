@@ -2,7 +2,7 @@
 
 Source code samples for "Defence in Depth" articles and presentations.
 
-This is an accompanying implementation of a secure REST API in Java 17 with Maven and Spring Security that follows the series of articles found
+This is an accompanying implementation of a secure REST API in Java 21 with Maven and Spring Security that follows the series of articles found
 at:
 
 https://securityblog.omegapoint.se

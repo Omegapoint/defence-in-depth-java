@@ -1,5 +1,5 @@
 # Build Java application
-FROM maven:3-openjdk-17-slim AS build-env
+FROM maven:3-amazoncorretto-21 AS build-env
 
 # Setup build space
 WORKDIR /app
@@ -9,7 +9,7 @@ COPY . ./
 RUN mvn clean install
 
 # Build runtime image
-FROM openjdk:17-alpine
+FROM amazoncorretto:21-alpine-jdk
 
 # Copy build
 WORKDIR /app
