@@ -1,0 +1,2 @@
+# Build
+Default this module is skipping system-tests when running `mvn clean install` since these require a running instance. To run all tests use the profile `allTests`: `mvn clean install -PallTests`
