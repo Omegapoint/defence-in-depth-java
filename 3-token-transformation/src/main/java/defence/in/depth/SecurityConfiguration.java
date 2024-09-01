@@ -26,7 +26,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(jwt -> jwt.jwt().jwtAuthenticationConverter(new CustomJwtAuthenticationConverter()));
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(
+                        jwt -> jwt.jwtAuthenticationConverter(new CustomJwtAuthenticationConverter())
+                ));
         return http.build();
     }
 
