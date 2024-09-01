@@ -3,6 +3,7 @@ package defence.in.depth.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,7 +47,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/**").denyAll() // Force authorization on all new endpoints
                 .anyRequest().authenticated() // Force authentication on all new endpoints
             )
-            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+            .oauth2ResourceServer((oauth) -> oauth.jwt(Customizer.withDefaults()));
         return http.build();
     }
 
