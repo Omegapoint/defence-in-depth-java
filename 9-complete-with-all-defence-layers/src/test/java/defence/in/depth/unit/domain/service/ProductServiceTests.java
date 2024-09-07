@@ -5,10 +5,8 @@ import defence.in.depth.database.repository.ProductsRepository;
 import defence.in.depth.domain.exceptions.ProductMarketMismatchException;
 import defence.in.depth.domain.exceptions.ProductNotFoundException;
 import defence.in.depth.domain.exceptions.ReadProductNotAllowedException;
-import defence.in.depth.domain.model.DomainEvent;
-import defence.in.depth.domain.model.Product;
-import defence.in.depth.domain.model.ProductId;
-import defence.in.depth.domain.model.ProductMarketId;
+import defence.in.depth.domain.exceptions.WriteProductNotAllowedException;
+import defence.in.depth.domain.model.*;
 import defence.in.depth.domain.service.AuditService;
 import defence.in.depth.domain.service.PermissionService;
 import defence.in.depth.domain.service.ProductsService;
@@ -16,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.Optional;
@@ -70,9 +69,9 @@ public class ProductServiceTests {
 
     @Test
     public void getById_throwsMarketMismatch_IfNotValidMarket() {
-        ProductId productId = new ProductId("42");
-        Mockito.when(productsRepository.findById(matches("42")))
-                .thenReturn(Optional.of(new ProductEntity("42", "My name", "no")));
+        ProductId productId = new ProductId("no42");
+        Mockito.when(productsRepository.findById(matches("no42")))
+                .thenReturn(Optional.of(new ProductEntity("no42", "My name", "no", "description")));
         Mockito.when(permissionService.canReadProducts()).thenReturn(true);
         Mockito.when(permissionService.hasPermissionToMarket(ProductMarketId.NO)).thenReturn(false);
 
@@ -83,7 +82,7 @@ public class ProductServiceTests {
 
         Mockito.verify(permissionService, Mockito.times(1)).canReadProducts();
         Mockito.verify(permissionService, Mockito.times(1)).hasPermissionToMarket(ProductMarketId.NO);
-        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("42"));
+        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("no42"));
         Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.NO_ACCESS_TO_DATA, productId);
         Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
 
@@ -96,9 +95,9 @@ public class ProductServiceTests {
     @Test
     public void getById_ReturnsOk_IfValidClaims()
     {
-        var productId = new ProductId("42");
-        Mockito.when(productsRepository.findById(matches("42")))
-                        .thenReturn(Optional.of(new ProductEntity("42", "My name", "se")));
+        var productId = new ProductId("se42");
+        Mockito.when(productsRepository.findById(matches("se42")))
+                        .thenReturn(Optional.of(new ProductEntity("se42", "My name", "se", "description")));
         Mockito.when(permissionService.canReadProducts()).thenReturn(true);
         Mockito.when(permissionService.hasPermissionToMarket(ProductMarketId.SE)).thenReturn(true);
 
@@ -110,9 +109,87 @@ public class ProductServiceTests {
 
         Mockito.verify(permissionService, Mockito.times(1)).canReadProducts();
         Mockito.verify(permissionService, Mockito.times(1)).hasPermissionToMarket(ProductMarketId.SE);
-        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("42"));
+        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("se42"));
         Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.PRODUCT_READ, productId);
         Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
+    }
+
+    @Test
+    void addDescription_throwsNotAllowed_IfNoValidWriteScope() {
+        Mockito.when(permissionService.canWriteProducts()).thenReturn(false);
+
+        ProductId productId = new ProductId("se1");
+        ProductDescription productDescription = new ProductDescription("description");
+        ProductsService productsService = new ProductsService(productsRepository, permissionService, auditService);
+
+        Assertions.assertThrows(WriteProductNotAllowedException.class, () -> productsService.addDescription(productId, productDescription));
+
+        Mockito.verify(permissionService, Mockito.times(1)).canWriteProducts();
+        Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.NO_ACCESS_TO_OPERATION, productId);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
+    }
+
+    @Test
+    public void addDescription_throwsNotFound_IfValidClaimButNotExisting() {
+        Mockito.when(permissionService.canWriteProducts()).thenReturn(true);
+
+        ProductsService productService = new ProductsService(productsRepository, permissionService, auditService);
+
+        Assertions.assertThrows(ProductNotFoundException.class,
+                () -> productService.addDescription(new ProductId("notfound"), new ProductDescription("description")));
+
+        Mockito.verify(permissionService, Mockito.times(1)).canWriteProducts();
+        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("notfound"));
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
+    }
+
+    @Test
+    public void addDescription_throwsMarketMismatch_IfNotValidMarket() {
+        ProductId productId = new ProductId("no42");
+        Mockito.when(productsRepository.findById(matches("no42")))
+                .thenReturn(Optional.of(new ProductEntity("no42", "My name", "no", "description")));
+        Mockito.when(permissionService.canWriteProducts()).thenReturn(true);
+        Mockito.when(permissionService.hasPermissionToMarket(ProductMarketId.NO)).thenReturn(false);
+
+        ProductsService productService = new ProductsService(productsRepository, permissionService, auditService);
+
+        Assertions.assertThrows(ProductMarketMismatchException.class,
+                () -> productService.addDescription(productId, new ProductDescription("description")));
+
+        Mockito.verify(permissionService, Mockito.times(1)).canWriteProducts();
+        Mockito.verify(permissionService, Mockito.times(1)).hasPermissionToMarket(ProductMarketId.NO);
+        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("no42"));
+        Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.NO_ACCESS_TO_DATA, productId);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
+    }
+
+    @Test
+    public void addDescription_ReturnsOk_IfValidClaims() {
+        ProductId productId = new ProductId("se42");
+        Mockito.when(productsRepository.findById(matches("se42")))
+                .thenReturn(Optional.of(new ProductEntity("se42", "My name", "SE", "description")));
+        Mockito.when(permissionService.canWriteProducts()).thenReturn(true);
+        Mockito.when(permissionService.hasPermissionToMarket(ProductMarketId.SE)).thenReturn(true);
+
+        ProductsService productsService = new ProductsService(productsRepository, permissionService, auditService);
+
+        ProductDescription newDescription = new ProductDescription("new description");
+        productsService.addDescription(productId, newDescription);
+
+        ArgumentCaptor<ProductEntity> argumentCaptor = ArgumentCaptor.forClass(ProductEntity.class);
+
+        Mockito.verify(permissionService, Mockito.times(1)).canWriteProducts();
+        Mockito.verify(permissionService, Mockito.times(1)).hasPermissionToMarket(ProductMarketId.SE);
+        Mockito.verify(productsRepository, Mockito.times(1)).findById(matches("se42"));
+        Mockito.verify(productsRepository, Mockito.times(1)).save(matches("se42"), argumentCaptor.capture());
+        Mockito.verify(auditService, Mockito.times(1)).log(DomainEvent.PRODUCT_WRITE, productId);
+        Mockito.verifyNoMoreInteractions(productsRepository, permissionService, auditService);
+
+        ProductEntity updatedProduct = argumentCaptor.getValue();
+        assertThat(updatedProduct.id()).isEqualTo("se42");
+        assertThat(updatedProduct.name()).isEqualTo("My name");
+        assertThat(updatedProduct.market()).isEqualTo("SE");
+        assertThat(updatedProduct.description()).isEqualTo("new description");
     }
 
 }

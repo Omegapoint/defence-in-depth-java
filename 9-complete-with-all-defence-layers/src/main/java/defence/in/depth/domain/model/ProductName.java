@@ -2,7 +2,6 @@ package defence.in.depth.domain.model;
 
 import defence.in.depth.domain.exceptions.InvalidDomainPrimitiveException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 
 import java.util.Objects;
 

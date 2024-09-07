@@ -16,6 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Tag("System")
 public class ProductsTests extends BaseTests {
 
+    //TODO: Test addDescription
     @Test
     public void getProductById_ShouldReturn401_WhenAnonymous() throws IOException, InterruptedException {
 
@@ -62,6 +63,4 @@ public class ProductsTests extends BaseTests {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
     }
-
-
 }

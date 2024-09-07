@@ -2,18 +2,17 @@ package defence.in.depth.unit.controller;
 
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import defence.in.depth.config.RestResponseEntityExceptionHandler;
 import defence.in.depth.controller.ProductsController;
 import defence.in.depth.domain.exceptions.ProductNotFoundException;
 import defence.in.depth.domain.exceptions.ReadProductNotAllowedException;
-import defence.in.depth.domain.model.Product;
-import defence.in.depth.domain.model.ProductId;
-import defence.in.depth.domain.model.ProductMarketId;
-import defence.in.depth.domain.model.ProductName;
+import defence.in.depth.domain.exceptions.WriteProductNotAllowedException;
+import defence.in.depth.domain.model.*;
 import defence.in.depth.domain.service.ProductsService;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.annotation.SecurityTestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -60,12 +60,8 @@ public class ProductsControllerTests {
   @Test
   public void getProductsByIdShouldReturn200WhenAuthorized() throws Exception {
     when(productsService.getById(any())).thenReturn(
-        new Product(
-            new ProductId("se1"),
-            new ProductName("ProductSweden"),
-            ProductMarketId.SE
-        )
-    );
+        new Product.ProductBuilder(new ProductId("se1"), new ProductName("ProductSweden"), ProductMarketId.SE)
+                .build());
 
     this.mvc.perform(get("/api/products/se1"))
         .andExpect(status().isOk());
@@ -75,12 +71,8 @@ public class ProductsControllerTests {
   @MethodSource({"idInjections", "invalidIds"})
   public void getProductsByIdShouldReturn400WhenInvalidId(String productId) throws Exception {
     when(productsService.getById(any())).thenReturn(
-        new Product(
-            new ProductId("se1"),
-            new ProductName("ProductSweden"),
-            ProductMarketId.SE
-        )
-    );
+        new Product.ProductBuilder(new ProductId("se1"), new ProductName("ProductSweden"), ProductMarketId.SE)
+                .build());
 
     this.mvc.perform(get("/api/products/{id}", productId))
         .andExpect(status().isBadRequest());
@@ -111,5 +103,63 @@ public class ProductsControllerTests {
     );
   }
 
+  @Test
+  public void addDescriptionShouldReturn403WhenCanNotWrite() throws Exception {
+    doThrow(new WriteProductNotAllowedException("User not allowed to write to product"))
+            .when(productsService).addDescription(any(), any());
 
+    this.mvc.perform(put("/api/products/se1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"productDescription\":\"this is a description\"}"))
+                    .andExpect(status().isForbidden());
+  }
+
+  @Test
+  public void addDescriptionShouldReturn200WhenAuthorized() throws Exception {
+    doNothing().when(productsService).addDescription(any(), any());
+
+    this.mvc.perform(put("/api/products/se1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"productDescription\":\"this is a description\"}"))
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  public void addDescriptionShouldReturn400WhenInvalidId() throws Exception {
+    doNothing().when(productsService).addDescription(any(), any());
+
+    this.mvc.perform(put("/api/products/{id}", "thisisanidthatistoolong")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"productDescription\":\"this is a description\"}"))
+            .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void addDescriptionShouldReturn404WhenNotFound() throws Exception {
+    doThrow(new ProductNotFoundException("Product not found"))
+            .when(productsService).addDescription(any(), any());
+
+    this.mvc.perform(put("/api/products/def")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"productDescription\":\"this is a description\"}"))
+            .andExpect(status().isNotFound());
+  }
+
+  @ParameterizedTest
+  @MethodSource("invalidDescriptions")
+  public void addDescriptionShouldReturn400WhenInvalidDescription(String description) throws Exception {
+    doNothing().when(productsService).addDescription(any(), any());
+
+    this.mvc.perform(put("/api/products/se1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(description))
+            .andExpect(status().isBadRequest());
+  }
+
+  public static Stream<Arguments> invalidDescriptions() {
+    return Stream.of(
+            Arguments.of("{\"productDescription\":\"tooshort\"}"),
+            Arguments.of("{\"productDescription\":\"\"}")
+    );
+  }
 }
