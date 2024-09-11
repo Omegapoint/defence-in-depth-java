@@ -63,4 +63,29 @@ public class ProductsTests extends BaseTests {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
     }
+
+    @Test
+    public void addDescription_ShouldReturn200_WhenCorrectScope() throws IOException, InterruptedException {
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        String jsonBody = """
+                {
+                  "productDescription":"testing123"
+                }
+                """;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .header("Authorization", "Bearer " + getJwtByScope("products.write"))
+                .header("Content-Type", "application/json")
+                .uri(URI.create(getBaseUrl() + "/api/products/se1"))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isEqualTo("");
+
+    }
 }

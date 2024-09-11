@@ -8,13 +8,16 @@ import defence.in.depth.domain.model.ProductMarketId;
 import defence.in.depth.domain.model.ProductName;
 import defence.in.depth.dto.ProductDTO;
 
+import java.util.Optional;
+
 public final class ProductMapper {
 
     public static Product toProduct(ProductEntity productEntity) {
         ProductId productId = new ProductId(productEntity.id());
         ProductName productName = new ProductName(productEntity.name());
         ProductMarketId productMarketId = ProductMarketId.of(productEntity.market());
-        ProductDescription productDescription = new ProductDescription(productEntity.description());
+        ProductDescription productDescription = Optional.ofNullable(productEntity.description())
+                .map(ProductDescription::new).orElse(null);
         return new Product.ProductBuilder(productId, productName, productMarketId).withDescription(productDescription).build();
     }
 
@@ -22,7 +25,7 @@ public final class ProductMapper {
         return new ProductDTO(product.getId().getProductId(),
             product.getName().getName(),
             product.getMarket().name(),
-            product.getDescription().getDescription());
+            Optional.ofNullable(product.getDescription()).map(ProductDescription::getDescription).orElse(null));
     }
 
     public static ProductEntity toEntity(Product product) {
