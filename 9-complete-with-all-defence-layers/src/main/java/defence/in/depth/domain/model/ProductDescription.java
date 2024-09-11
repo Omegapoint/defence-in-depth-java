@@ -20,7 +20,7 @@ public class ProductDescription {
 
     public static boolean isValidDescription(String description) {
         if (description == null) {
-            return true;
+            return false;
         }
         if (description.length() < 10 || description.length() > 300) {
             return false;

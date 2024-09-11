@@ -13,7 +13,7 @@ public final class Product {
         this.id = id;
         this.name = name;
         this.market = market;
-        this.description = new ProductDescription(null);
+        this.description = null;
     }
 
     public ProductId getId() {
