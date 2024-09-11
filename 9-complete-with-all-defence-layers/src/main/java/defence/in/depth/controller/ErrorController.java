@@ -13,7 +13,7 @@ public class ErrorController {
 
     @PutMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity throwException() {
+    public ResponseEntity<Object> throwException() {
         throw new NotImplementedException("Not implemented on purpose");
     }
 
