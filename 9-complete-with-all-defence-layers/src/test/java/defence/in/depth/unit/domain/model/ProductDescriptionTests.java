@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductDescriptionTests {
 
     @ParameterizedTest
+    @NullSource
     @MethodSource("invalidDescriptions")
     public void constructorShouldRejectInvalidData(String description) {
         assertThrows(InvalidDomainPrimitiveException.class, () -> new ProductDescription(description));
     }
 
     @ParameterizedTest
-    @NullSource
     @MethodSource("validDescriptions")
     public void constructorShouldAcceptValidData(String description) {
         assertThat(new ProductDescription(description).getDescription()).isEqualTo(description);
