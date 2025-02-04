@@ -7,7 +7,7 @@
         <artifactId>root</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>data-access-validation</artifactId>
+    <artifactId>6-data-access-validation</artifactId>
     <name>6-data-access-validation</name>
     <description>Validate the permission to query or change data</description>
     <dependencies>
