@@ -2,7 +2,7 @@
 GET https://localhost:8443/api/products/se1
 
 ### Fetch access-token with read scope from token service
-POST http://localhost:8180/realms/defence-in-depth/protocol/openid-connect/token
+POST https://localhost:4000/realms/defence-in-depth/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=client_credentials&client_id=m2m&client_secret=secret&scope=products.read
@@ -10,7 +10,7 @@ grant_type=client_credentials&client_id=m2m&client_secret=secret&scope=products.
 > {% client.global.set("jwt", response.body.access_token);%}
 
 ### Fetch access-token with write scope from token service
-POST http://localhost:8180/realms/defence-in-depth/protocol/openid-connect/token
+POST https://localhost:4000/realms/defence-in-depth/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=client_credentials&client_id=m2m&client_secret=secret&scope=products.write

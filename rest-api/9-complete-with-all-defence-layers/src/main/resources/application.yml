@@ -5,8 +5,8 @@ server:
   ssl:
     enabled: true
     key-store-type: PKCS12
-    key-store: # Overwritten by Secrets Manager
-    key-store-password: # Overwritten by Secrets Manager
+    key-store: /home/erica/.local/share/mkcert/defence-in-depth.p12
+    key-store-password: notasecretpassword
 spring:
   application:
     name: defence-in-depth
@@ -14,10 +14,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/defence-in-depth
+          issuer-uri: https://localhost:4000/realms/defence-in-depth
   config:
     import:
-      'aws-secretsmanager:defence-in-depth'
+      'optional:aws-secretsmanager:defence-in-depth'
 aws:
   secretsmanager:
     region: eu-west-1
