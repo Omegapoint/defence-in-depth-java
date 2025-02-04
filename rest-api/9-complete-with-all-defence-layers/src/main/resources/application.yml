@@ -14,7 +14,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/defence-in-depth
+          issuer-uri: https://localhost:4000/realms/defence-in-depth
   config:
     import:
       'aws-secretsmanager:defence-in-depth'

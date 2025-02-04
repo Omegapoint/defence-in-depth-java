@@ -2,10 +2,14 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
     volumes:
-      - ./keycloak:/opt/keycloak/data/import
+      - ./keycloak/data/import:/opt/keycloak/data/import
+      - ./keycloak/conf/server.crt.pem:/opt/keycloak/conf/server.crt.pem
+      - ./keycloak/conf/server.key.pem:/opt/keycloak/conf/server.key.pem
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt.pem
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key.pem
     ports:
-      - 8180:8080
-    command: start-dev --import-realm
+      - 4000:8443
+    command: start-dev --import-realm --log=file
