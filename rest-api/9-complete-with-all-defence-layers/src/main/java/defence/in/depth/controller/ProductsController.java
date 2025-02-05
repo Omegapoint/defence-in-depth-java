@@ -30,7 +30,7 @@ public class ProductsController {
 
     // More granular control using preauthorize as a compliment to requestMatchers defined in the security configuration.
     // Note that the main permission check is still in the core business domain in the productsService
-    @PreAuthorize("hasAuthority('" + READ_PRODUCTS_SCOPE + "')")
+    @PreAuthorize("@permissionService.canReadProducts()")
     @GetMapping("/{id}")
     // The type of id is a domain primitive ProductId and if the validation fails in the constructor
     // Spring will return 400 Bad Request for us when we use it as a `PathVariable`.
@@ -40,7 +40,7 @@ public class ProductsController {
         return ResponseEntity.ok(productDto);
     }
 
-    @PreAuthorize("hasAuthority('" + WRITE_PRODUCTS_SCOPE + "')")
+    @PreAuthorize("@permissionService.canWriteProducts()")
     @PutMapping("/{id}")
     public ResponseEntity<Void> addDescription(@PathVariable ("id") ProductId productId,
                                                @RequestBody ProductDescription productDescription) {
