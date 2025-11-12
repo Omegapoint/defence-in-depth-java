@@ -11,17 +11,13 @@ An article that covers these concepts exactly can be found at:
 
 https://securityblog.omegapoint.se/en/secure-apis-by-design
 
+https://securityblog.omegapoint.se/en/test-driven-appsec
+
 Presentation of this material can be found at YouTube:
 
-https://www.youtube.com/watch?v=_7fFm8e8UpM (Jfokus 2022, demos in Java 17 with Maven and Spring Security)
+https://youtu.be/V-SgiA-D9r0 (NDC Security 2023, demos in .NET)
 
-https://www.youtube.com/watch?v=5nQ00_z0hF4 (NDC Oslo 2021, demos in ASP.NET Core 6)
-
-ASP.NET repo at https://github.com/Omegapoint/defence-in-depth
-
-Video recordings of additional "Defence in Depth" presentations (in Swedish) can be found at:
-
-https://omegapoint.se/academy-plus
+https://youtu.be/6dgwzjuWhl0 (Jfokus 2025, demos in Java)
 
 The approach follows that of the book "Secure by Design":
 
